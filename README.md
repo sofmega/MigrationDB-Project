@@ -1,9 +1,10 @@
-Full-Stack Task Management App (Firebase Edition)
+# Full-Stack Task Management App 
+
 This is a simple yet complete full-stack web application for managing tasks. It was originally built using Supabase and Prisma but has been fully migrated to use the Firebase platform, including Firebase Authentication and Cloud Firestore.
 
 The application allows users to register, log in, and perform CRUD (Create, Read, Update, Delete) operations on their personal tasks. Unauthorized users can view a list of all tasks on the login page.
 
-✨ Features
+# ✨ Features
 User Authentication: Secure user registration and login handled by Firebase Authentication.
 
 Task Management (CRUD): Logged-in users can create, view, update, and delete their own tasks.
@@ -16,7 +17,7 @@ Optimistic UI Updates: The frontend provides a smooth user experience by updatin
 
 Real-time Auth State: The application uses Firebase's real-time auth state listener to manage user sessions seamlessly.
 
-🛠️ Tech Stack
+# 🛠️ Tech Stack
 Frontend:
 
 React & TypeScript
@@ -39,15 +40,9 @@ CORS
 
 Database:
 
-Google Cloud Firestore (NoSQL)
+Google Cloud Firestore (NoSQL) / Supabase prisma
 
-📂 Project Structure
-The project is organized into two main directories:
-
-/
-├── frontend/   # Contains the React/Vite client application
-└── backend/    # Contains the Node.js/Express server
-🚀 Getting Started
+# 🚀 Getting Started
 Follow these instructions to get the project running on your local machine.
 
 Prerequisites
@@ -56,6 +51,8 @@ Node.js (v16 or later)
 npm (or yarn)
 
 A Google Firebase project.
+
+A Supabase prisma
 
 1. Backend Setup
 Navigate to the backend directory:
@@ -67,7 +64,8 @@ Install dependencies:
 
 Bash
 
-npm install
+npm install  
+
 Set up Firebase Admin SDK:
 
 Go to your Firebase project console.
@@ -90,9 +88,11 @@ Run the backend server:
 Bash
 
 npm start
+
 The server should now be running on http://localhost:5000.
 
 2. Frontend Setup
+
 Navigate to the frontend directory:
 
 Bash
@@ -103,6 +103,7 @@ Install dependencies:
 Bash
 
 npm install
+
 Configure Firebase Client:
 
 Open the frontend/src/firebaseConfig.ts file.
@@ -122,31 +123,20 @@ Bash
 npm run dev
 The React application will be available at http://localhost:5173 (or another port if 5173 is busy).
 
-🌐 API Endpoints
-All API routes are prefixed with the base URL http://localhost:5000.
+# How to Run Migration Script : 
 
-Method	Endpoint	Protection	Description
-POST	/register	Public	Registers a new user.
-GET	/tasks/public-tasks	Public	Gets all tasks from all users.
-POST	/tasks	Private	Creates a new task for the authenticated user.
-GET	/tasks	Private	Gets all tasks for the authenticated user.
-PUT	/tasks/:id	Private	Updates a specific task for the authenticated user.
-DELETE	/tasks/:id	Private	Deletes a specific task for the authenticated user.
+ Migrating Data from Supabase
+ 
+If you used the previous Supabase version of this app, you can migrate your data using the provided script. If you are starting fresh, you can skip this step.
 
-Exporter vers Sheets
-Note: Private routes require a Bearer token in the Authorization header, which should be the ID token obtained from Firebase upon login.
+Add Supabase Credentials: In the backend/.env file, add your Supabase project URL and anon key.
 
-🔐 Authentication Flow
-The application has shifted from a custom JWT-based system to Firebase Authentication.
+Run the Script: Navigate to the /backend directory and run the migration script:
 
-Registration: The user fills out the registration form. The frontend sends the credentials to the POST /register backend endpoint. The backend uses the Firebase Admin SDK to create a new user in Firebase Auth and a corresponding user profile in Firestore.
+Bash
 
-Login: The user enters their email and password on the login page. The frontend uses the Firebase Client SDK's signInWithEmailAndPassword method to authenticate the user directly with Firebase. The backend's /login endpoint is no longer used.
+# This command executes the migration-script.js file
 
-Session Management: Upon successful login, the Firebase SDK automatically manages the user's session and ID token. An onAuthStateChanged listener in the React app detects the user's sign-in state and navigates them to the task page.
+node migration-script.js  
 
-Authenticated Requests: For all private API calls (like creating or deleting a task), the frontend gets the current user's ID token using auth.currentUser.getIdToken() and includes it in the Authorization: Bearer <ID_TOKEN> header.
-
-Backend Verification: The Express server uses a middleware to intercept these requests. It verifies the ID token using the Firebase Admin SDK's verifyIdToken method. If the token is valid, the request proceeds; otherwise, a 403 Forbidden error is returned.
-
-Logout: Clicking the logout button calls the signOut() method from the Firebase Client SDK, which clears the session. The onAuthStateChanged listener then automatically redirects the user to the login page.
+This script will transfer all users and tasks to your Firebase project. You only need to do this once.
